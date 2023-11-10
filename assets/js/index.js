@@ -22,14 +22,37 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+ async function uploadFile(file, customLabels) {
+
+    var reader = new FileReader();
+    var name = file.files[0].name;
+    reader.onload = async function () {
+        base64 = await reader.result;
+        base64 = base64.split(',')[1];
+        console.log(base64);
+        return sdk.bucketFilenamePut({
+                    'filename': name,
+                    'bucket': 'upload-photos-b2',
+                    'Content-Type': 'text/base64',
+                    'x-amz-meta-customLabels': customLabels
+                }, base64, {});
+    };
+    await reader.readAsDataURL(file.files[0]);
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+}
+
 // /photos
 function upload() {
     customLabels = document.getElementById("customLabels").value.split(",")
-    photoFile = document.getElementById("photo").files[0]
-    console.log(customLabels)
+    // photoFile = document.getElementById("photo").files[0]
+    photoFile = document.getElementById("photo")
+
+    console.log(photoFile)
 
     if(photoFile != "") {
-        putPhotos(customLabels, photoFile)
+        uploadFile(photoFile, customLabels)
         .then((response) => {
             console.log(response)
         })
@@ -37,26 +60,6 @@ function upload() {
             console.log(error)
         })
         console.log("File uploaded")
-        // document.getElementById("success").style.display = "inline"
-        // document.getElementById("success").innerText = "Success"
-        // <div id="succes" class="alert alert-success" role="alert"></div>
-        // <div id="failure" class="alert alert-danger" role="alert"></div>
-
-        // let div = document.createElement('div')
-        // div.className = "alert alert-success"
-        // div.role = "alert"
-        // div.innerText = "Hello"
-
-        // let alertDiv = document.getElementById("cardDeck")
-        // alertDiv.appendChild(div)
-
-        // let div = document.createElement('div')
-        // div.className = "alert alert-success"
-        // div.innerText = "Successfully uploaded!"
-        // div.role = "alert"
-
-        // let alertDiv = document.getElementById("alertMessage")
-        // alertDiv.appendChild(div)
 
         resetMessage()
         let successDiv = document.getElementById("success")
@@ -138,63 +141,13 @@ function cancel() {
     resetMessage()
 }
 
-// function getBase64(file) {
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.readAsDataURL(file);
-//       reader.onload = () => resolve(reader.result);
-//       reader.onerror = error => reject(error);
-//     });
-//   }
-
-// function getBase64(file) {
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.readAsBinaryString(file);
-//       reader.onload = () => resolve(reader.result);
-//       reader.onerror = error => reject(error);
-//     });
-//   }
-
-// function uploadFile(inputElement) {
-//     var file = inputElement.files[0];
-//     var reader = new FileReader();
-//     reader.onloadend = function() {
-//       var data=(reader.result).split(',')[1];
-//       var binaryBlob = atob(data);
-//       console.log('Encoded Binary File String:', binaryBlob);
-//       return binaryBlob;
-//     }
-//     return reader.readAsDataURL(file);
-//   }
-
-function putPhotos(customLabels, photoFile) {
-    // params, body, additionalParams
-    // var r = new FileReader()
-    // r.readAsBinaryString(photoFile)
-    // uploadFile(photoFile).then(
-    //     data => {
-    //         return sdk.bucketFilenamePut({
-    //             'x-amz-meta-customLabels': customLabels,
-    //             'bucket': 'upload-photos-b2',
-    //             'filename': 'frontend_flower.png'
-    //         }, 
-    //             data
-    //         , {});
-    //     }
-    //   )
-
-    const reader = new FileReader();
-    reader.readAsDataURL(photoFile)
-    console.log(reader)
-    data = reader.result
-    console.log(data)
+function putRequest(binaryBlob, customLabels) {
     return sdk.bucketFilenamePut({
         'x-amz-meta-customLabels': customLabels,
         'bucket': 'upload-photos-b2',
-        'filename': 'frontend_flower.jpeg'
+        'filename': 'frontend_flower.png'
     }, 
-        data
+        binaryBlob
     , {});
 }
 

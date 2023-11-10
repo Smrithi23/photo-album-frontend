@@ -140,12 +140,12 @@ apigClientFactory.newClient = function (config) {
     apigClient.bucketFilenamePut = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, ['filename', 'bucket', 'x-amz-meta-customLabels'], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['filename', 'bucket', 'Content-Type', 'x-amz-meta-customLabels'], ['body']);
         
         var bucketFilenamePutRequest = {
             verb: 'put'.toUpperCase(),
             path: pathComponent + uritemplate('/{bucket}/{filename}').expand(apiGateway.core.utils.parseParametersToObject(params, ['filename', 'bucket', ])),
-            headers: apiGateway.core.utils.parseParametersToObject(params, ['x-amz-meta-customLabels']),
+            headers: apiGateway.core.utils.parseParametersToObject(params, ['Content-Type', 'x-amz-meta-customLabels']),
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
         };
