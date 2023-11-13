@@ -30,6 +30,11 @@ function upload() {
     customLabels = document.getElementById("customLabels").value.split(",")
     photoFile = document.getElementById("photo")
 
+    for (var i = 0; i < customLabels.length; i++) {
+        customLabels[i] = customLabels[i].trim();
+    }
+    
+    console.log("custom", customLabels);
     console.log(photoFile)
 
     if(photoFile != "") {
