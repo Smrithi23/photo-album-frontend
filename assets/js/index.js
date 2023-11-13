@@ -1,21 +1,3 @@
-// document.addEventListener('keydown', keyPressed);
-// BASE_URL = ""
-
-/* <div class="card" style="width: 18rem; display:inline-block">
-    <img class="card-img-top" src="./flower.jpeg" alt="Card image cap">
-    </div> */
-
-// function keyPressed(e) {
-//   if(e && e.keyCode == 13) {
-//     console.log("Enter Pressed");
-//     search()
-//   }
-// }
-
-// window.onload = (event) => {
-//     
-// };
-
 document.addEventListener('keydown', (e) => {
     if(e && e.keyCode == 13) {
         search()
@@ -46,7 +28,6 @@ document.addEventListener('keydown', (e) => {
 // /photos
 function upload() {
     customLabels = document.getElementById("customLabels").value.split(",")
-    // photoFile = document.getElementById("photo").files[0]
     photoFile = document.getElementById("photo")
 
     console.log(photoFile)
@@ -83,34 +64,42 @@ function upload() {
     reset()
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
 // /search
 function search() {
     searchKey = document.getElementById("searchKey").value
 
-    // validate if search key is entered
     if(searchKey) {
         getSearch(searchKey)
         .then((response) => {
             console.log(response)
-            console.log(response.header)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-        console.log(searchKey)
-        let parent = document.getElementById("cardDeck")
-        for(let i = 0; i < 5; i++) {
-            let div = document.createElement('div')
-            div.className = "card"
-            div.style.width = "18em"
-            div.style.display = "inline-block"
+            let urls = JSON.parse(response.data.body)["search_result"]
+            console.log(urls)
+            console.log(urls)
+            
+            let parent = document.getElementById("cardDeck")
+            removeAllChildNodes(parent)
+            for(let i = 0; i < urls.length; i++) {
+                let div = document.createElement('div')
+                div.className = "card"
+                div.style.width = "18em"
+                div.style.display = "inline-block"
 
-            let image = document.createElement('img')
-            image.className = "card-img-top"
-            image.src = "./flower.jpeg"
-            div.appendChild(image)
-            parent.appendChild(div)
-        }
+                let image = document.createElement('img')
+                image.className = "card-img-top"
+                image.src = urls[i]
+                div.appendChild(image)
+                parent.appendChild(div)
+            }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     } else {
         console.log("No search key")
     }
@@ -170,8 +159,6 @@ click_to_record.addEventListener('click',function(){
             .map(result => result[0])
             .map(result => result.transcript)
             .join('')
-
-       
         document.getElementById("searchKey").value = transcript;
     });
     
