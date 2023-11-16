@@ -8,6 +8,7 @@ document.addEventListener('keydown', (e) => {
 
     var reader = new FileReader();
     var name = file.files[0].name;
+    console.log("in uploadFile")
     reader.onload = async function () {
         base64 = await reader.result;
         base64 = base64.split(',')[1];
@@ -19,6 +20,7 @@ document.addEventListener('keydown', (e) => {
                     'x-amz-meta-customLabels': customLabels
                 }, base64, {});
     };
+    console.log("$$$$")
     await reader.readAsDataURL(file.files[0]);
     reader.onerror = function (error) {
       console.log('Error: ', error);
@@ -138,6 +140,9 @@ function cancel() {
 function putRequest(binaryBlob, customLabels) {
     return sdk.bucketFilenamePut({
         'x-amz-meta-customLabels': customLabels,
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Origin': '*',
         'bucket': 'upload-photos-b2',
         'filename': 'frontend_flower.png'
     }, 
@@ -148,7 +153,10 @@ function putRequest(binaryBlob, customLabels) {
 function getSearch(searchText) {
     // params, body, additionalParams
     return sdk.searchGet({
-        'q': searchText
+        'q': searchText,
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Origin': '*'
     }, {}, {});
 }
 

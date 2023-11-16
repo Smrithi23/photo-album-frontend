@@ -53,7 +53,7 @@ apigClientFactory.newClient = function (config) {
 
     
     // extract endpoint and path from url
-    var invokeUrl = 'https://9kij1v3n8h.execute-api.us-east-1.amazonaws.com/dev';
+    var invokeUrl = 'https://o4q9ojpjhi.execute-api.us-east-1.amazonaws.com/production';
     var endpoint = /(^https?:\/\/[^\/]+)/g.exec(invokeUrl)[1];
     var pathComponent = invokeUrl.substring(endpoint.length);
 
@@ -119,28 +119,10 @@ apigClientFactory.newClient = function (config) {
     };
     
     
-    apigClient.bucketOptions = function (params, body, additionalParams) {
-        if(additionalParams === undefined) { additionalParams = {}; }
-        
-        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
-        
-        var bucketOptionsRequest = {
-            verb: 'options'.toUpperCase(),
-            path: pathComponent + uritemplate('/{bucket}').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
-            headers: apiGateway.core.utils.parseParametersToObject(params, []),
-            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
-            body: body
-        };
-        
-        
-        return apiGatewayClient.makeRequest(bucketOptionsRequest, authType, additionalParams, config.apiKey);
-    };
-    
-    
     apigClient.bucketFilenamePut = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, ['filename', 'bucket', 'Content-Type', 'x-amz-meta-customLabels'], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['Content-Type', 'filename', 'bucket', 'x-amz-meta-customLabels'], ['body']);
         
         var bucketFilenamePutRequest = {
             verb: 'put'.toUpperCase(),
