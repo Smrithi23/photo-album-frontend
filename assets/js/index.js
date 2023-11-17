@@ -15,7 +15,7 @@ document.addEventListener('keydown', (e) => {
         console.log(base64);
         return sdk.bucketFilenamePut({
                     'filename': name,
-                    'bucket': 'upload-photos-b2',
+                    'bucket': 'upload-photos-b2-demo',
                     'Content-Type': 'text/base64',
                     'x-amz-meta-customLabels': customLabels
                 }, base64, {});
